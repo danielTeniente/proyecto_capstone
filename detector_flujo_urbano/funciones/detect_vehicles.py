@@ -1,5 +1,7 @@
 #open CV
 import cv2
+#get center of rectangles
+from .get_centroid import get_centroid
 
 def detect_vehicles(img, 
     wh_cars={"min_w":18,"max_w":150,"min_h":18,"max_h":120},
@@ -13,10 +15,13 @@ def detect_vehicles(img,
     the rectangle that surround the vehicle.
 
     You can stablish a min and max width and height
+    for cars, motorcycles, people and heavy vehicles
+
+    by default, it only detects cars
     """
 
     #dictionary to save all types of vehicles
-    matches = {"cars":[],
+    vehicles_founded = {"cars":[],
         "motorcycles":[],
         "heavy_vehicles":[],
         "people":[]}
@@ -30,30 +35,53 @@ def detect_vehicles(img,
         (x, y, w, h) = cv2.boundingRect(contour)
         #boolean information
         # width and height should for cars, motorcycles, heavy_vehicles and people
-        is_a_car = (w >= wh_cars["min_w"]) and ( 
+        is_a_car = (
+            w >= wh_cars["min_w"]) and ( 
             h >= wh_cars["min_h"]) and (
-                w < wh_cars["max_w"]) and (
-                    h < wh_cars["max_h"])
+            w < wh_cars["max_w"]) and (
+            h < wh_cars["max_h"])
 
-        is_a_heavy = (w >= wh_heavy_vehicles["min_w"]) and ( 
+        is_a_heavy = (
+            w >= wh_heavy_vehicles["min_w"]) and ( 
             h >= wh_heavy_vehicles["min_h"]) and (
-                w <= wh_heavy_vehicles["max_w"]) and (
-                    h <= wh_heavy_vehicles["max_h"])
+            w < wh_heavy_vehicles["max_w"]) and (
+            h < wh_heavy_vehicles["max_h"])
+
+        is_a_person = (
+            w >= wh_people["min_w"]) and ( 
+            h >= wh_people["min_h"]) and (
+            w < wh_people["max_w"]) and (
+            h < wh_people["max_h"])
+            
+        is_a_motorcycle = (
+            w >= wh_motorcycles["min_w"]) and ( 
+            h >= wh_motorcycles["min_h"]) and (
+            w < wh_motorcycles["max_w"]) and (
+            h < wh_motorcycles["max_h"])
 
         if is_a_car:       
             # getting center of the bounding box
             centroid = get_centroid(x, y, w, h)
 
-            #se almacenan los datos del rectángulo y el centro del rectángulo
-            #este rectángulo está relacionado con los contornos encontrados por opencv
-            matches["cars"].append(((x, y, w, h), centroid))
+            #save the rectangle and the center of it
+            vehicles_founded["cars"].append(((x, y, w, h), centroid))
 
         if is_a_heavy:
-                    # getting center of the bounding box
+            #getting center of the bounding box
             centroid = get_centroid(x, y, w, h)
 
-            #se almacenan los datos del rectángulo y el centro del rectángulo
-            #este rectángulo está relacionado con los contornos encontrados por opencv
-            matches["heavy_vehicles"].append(((x, y, w, h), centroid))
+            vehicles_founded["heavy_vehicles"].append(((x, y, w, h), centroid))
 
-    return matche
+        if is_a_motorcycle:
+            #getting center of the bounding box
+            centroid = get_centroid(x, y, w, h)
+
+            vehicles_founded["motorcycles"].append(((x, y, w, h), centroid))
+
+        if is_a_person:
+            #getting center of the bounding box
+            centroid = get_centroid(x, y, w, h)
+
+            vehicles_founded["people"].append(((x, y, w, h), centroid))
+
+    return vehicles_founded
