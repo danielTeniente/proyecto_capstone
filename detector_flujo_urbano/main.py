@@ -1,60 +1,11 @@
 
-from funciones.get_centroid import get_centroid 
-#from funciones.detect_vehicles import detect_vehicles
+from funciones.detect_vehicles import detect_vehicles
 
 
 import numpy as np
 import cv2
 import argparse
 import math
-
-#por defecto sólo cuenta autos
-def detectar_vehiculo(fg_mask, wh_livianos={"min_w":18,"max_w":150,"min_h":18,"max_h":120},
-    wh_motos={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
-    wh_personas={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
-    wh_pesados={"min_w":0,"max_w":0,"min_h":0,"max_h":0}):
-
-    #diccionario para diferenciar entre cada vehículo
-    matches = {"autos":[],
-        "motos":[],
-        "buses":[],
-        "personas":[]}
-
-    # encuentra los contornos de la imagen
-    contours, hierarchy = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)
-
-    # filtrando tipos de vehículos
-    for (i, contour) in enumerate(contours):
-        #coordenadas del rectángulo que engloga la forma encontrada
-        (x, y, w, h) = cv2.boundingRect(contour)
-        #el ancho y el alto son diferentes para los autos, motos, autobuses
-        es_auto = (w >= wh_livianos["min_w"]) and ( 
-            h >= wh_livianos["min_h"]) and (
-                w <= wh_livianos["max_w"]) and (
-                    h <= wh_livianos["max_h"])
-
-        es_bus = (w >= wh_pesados["min_w"]) and ( 
-            h >= wh_pesados["min_h"]) and (
-                w <= wh_pesados["max_w"]) and (
-                    h <= wh_pesados["max_h"])
-
-        if es_auto:       
-            # getting center of the bounding box
-            centroid = get_centroid(x, y, w, h)
-
-            #se almacenan los datos del rectángulo y el centro del rectángulo
-            #este rectángulo está relacionado con los contornos encontrados por opencv
-            matches["autos"].append(((x, y, w, h), centroid))
-
-        if es_bus:
-                    # getting center of the bounding box
-            centroid = get_centroid(x, y, w, h)
-
-            #se almacenan los datos del rectángulo y el centro del rectángulo
-            #este rectángulo está relacionado con los contornos encontrados por opencv
-            matches["buses"].append(((x, y, w, h), centroid))
-
-    return matches
 
 #se envía la ubicación del vehículo y se pregunta si está o no en la zona de salida
 def check_exit(point, exit_masks):
@@ -75,7 +26,7 @@ def train_bg_subtractor(inst, cap, num=500):
 
     for i in range(num):
         ret, frame = capture.read()
-        inst.apply(frame, None, 0.005)
+        inst.apply(frame, None, 0.0025)
 
 
 def distance(x, y, x_weight=1.0, y_weight=1.0):
@@ -88,7 +39,10 @@ def draw_count(img, num_autos=0,num_buses=0,num_motos=0,num_personas=0):
 
     # drawing top block with counts
     cv2.rectangle(img, (0, 0), (img.shape[1], 50), (0, 0, 0), cv2.FILLED)
-    cv2.putText(img, ("Autos: {n_a}, Buses: {n_b} ".format(n_a=num_autos,n_b=num_buses)), (30, 30),
+    cv2.putText(img, ("Ligeros: {n_a}, Pesados: {n_b}, Personas: {n_c}, Motocicletas: {n_d}".format(n_a=num_autos,
+    n_b=num_buses,
+    n_c=num_personas,
+    n_d=num_motos)), (30, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
     return img
 
@@ -202,7 +156,7 @@ args = parser.parse_args()
 #history toma en cuenta cuántos frames anteiores se usan para considerar lo que es el fondo
 #si un objeto aparece en la misma posisicón durante los mismos frames que el history, el objeto
 #es tomado como fondo
-backSub = cv2.createBackgroundSubtractorMOG2(history=500, detectShadows=False)
+backSub = cv2.createBackgroundSubtractorMOG2(history=200, detectShadows=False)
 
 
 capture = cv2.VideoCapture(cv2.samples.findFileOrKeep(args.input))
@@ -212,7 +166,7 @@ if not capture.isOpened:
     exit(0)
 
 # skipping 500 frames to train bg subtractor
-train_bg_subtractor(backSub, capture, num=501)
+train_bg_subtractor(backSub, capture, num=499)
 
 ret, frame = capture.read()
 height , width , layers =  frame.shape
@@ -233,18 +187,22 @@ for rectangles in EXIT_PTS:
 #Esta lista servirá para darle seguimiento a los vehículos
 pathes_autos = []
 pathes_buses = []
+pathes_personas = []
+pathes_motos = []
 
 #pesos considerados para la medición de la distancia
 x_weight = 0.9
-y_weight = 0.9
+y_weight = 0.7
 
-max_dst=30
-path_size=10
+max_dst=50
+path_size=5
 
 
 #contadores
 contador_autos = 0
-contador_buses = 0
+contador_pesados = 0
+contador_motos = 0
+contador_personas = 0
 
 ##################################33
 #Procesamiento del video
@@ -270,21 +228,24 @@ while True:
     #Eliminación del fondo y filtros
     ###################################
     
-    fgMask = backSub.apply(roi,None, 0.005)
+    fgMask = backSub.apply(roi,None, 0.003)
 
     #filtros
+    #menores a 5,5 produce muchos bordes
+    kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 7))
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 
     # Remove noise
-    opening = cv2.morphologyEx(fgMask, cv2.MORPH_OPEN, kernel)
+    opening = cv2.morphologyEx(fgMask, cv2.MORPH_OPEN, kernel_close)
+
     # Fill any small holes
     closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
 
     # Dilate to merge adjacent blobs
-    dilation = cv2.dilate(closing, kernel, iterations=2)
+    dilation = cv2.dilate(closing, kernel, iterations=3)
 
     # threshold
-    dilation[dilation < 240] = 0
+    dilation[dilation < 250] = 0
 
 
     ###############################################
@@ -301,12 +262,14 @@ while True:
     ########################################
 
     #Se buscan VEHICULOS en la imaen
-    matches = detectar_vehiculo(resized_fgMask,
-        wh_livianos={"min_w":28,"max_w":100,"min_h":18,"max_h":50},
-        wh_pesados={"min_w":100,"max_w":400,"min_h":50,"max_h":420})
+    matches = detect_vehicles(resized_fgMask,
+        wh_heavy_vehicles={"min_w":100,"max_w":400,"min_h":50,"max_h":420},
+        wh_cars={"min_w":40,"max_w":99,"min_h":20,"max_h":49},
+        wh_motorcycles={"min_w":15,"max_w":39,"min_h":10,"max_h":19},
+        wh_people={"min_w":0,"max_w":14,"min_h":0,"max_h":9})
 
     #se dibujan rectángulos cuando encuentra un vehículo
-    for match in matches["autos"]:
+    for match in matches["cars"]:
         (x, y, w, h) = match[0]
         #dibuja un rectángulo
         if(check_exit(match[1],[exit_mask])):
@@ -314,14 +277,32 @@ while True:
         else:
             cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (173, 255, 47), 3)
 
-    #se dibujan rectángulos cuando encuentra un vehículo
-    for match in matches["buses"]:
+    #se dibujan rectángulos cuando encuentra un vehículo pesado
+    for match in matches["heavy_vehicles"]:
         (x, y, w, h) = match[0]
         #dibuja un rectángulo
         if(check_exit(match[1],[exit_mask])):
             cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (75, 0, 130), 3)
         else:
-            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (255, 105, 180), 3)            
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (255, 105, 180), 3) 
+
+    #se dibujan rectángulos cuando encuentra un moto
+    for match in matches["motorcycles"]:
+        (x, y, w, h) = match[0]
+        #dibuja un rectángulo
+        if(check_exit(match[1],[exit_mask])):
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (36, 98, 138), 3)
+        else:
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (79, 175, 237), 3)            
+   
+    #se dibujan rectángulos cuando encuentra una persona
+    for match in matches["people"]:
+        (x, y, w, h) = match[0]
+        #dibuja un rectángulo
+        if(check_exit(match[1],[exit_mask])):
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (46, 26, 136), 3)
+        else:
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (108, 79, 237), 3)            
         
 
     ###############################################
@@ -336,14 +317,16 @@ while True:
     #############33
     #Dibuja el contador
     ########################33
-    draw_count(resized_roi,num_autos=contador_autos,num_buses=contador_buses)   
+    draw_count(resized_roi,num_autos=contador_autos,num_buses=contador_pesados)   
     #se reproduce la imagen zoom de la zona evaluada
     cv2.imshow('Frame', resized_roi)
     #se muestra la máscara sin fondo
     cv2.imshow('FG Mask', resized_fgMask)
     exit_masks = [exit_mask]
-    contador_autos,pathes_autos = contar_vehiculos(pathes=pathes_autos,matches=matches["autos"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_autos)
-    contador_buses,pathes_buses = contar_vehiculos(pathes=pathes_buses,matches=matches["buses"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_buses)
+    contador_autos,pathes_autos = contar_vehiculos(pathes=pathes_autos,matches=matches["cars"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_autos)
+    contador_pesados,pathes_buses = contar_vehiculos(pathes=pathes_buses,matches=matches["heavy_vehicles"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_pesados)
+    contador_motos,pathes_motos = contar_vehiculos(pathes=pathes_motos,matches=matches["motorcycles"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_motos)
+    contador_personas,pathes_personas = contar_vehiculos(pathes=pathes_personas,matches=matches["people"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_personas)
 
     #cerrar el programa
     keyboard = cv2.waitKey(30)

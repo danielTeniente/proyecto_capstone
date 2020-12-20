@@ -1,5 +1,6 @@
 #open CV
 import cv2
+
 #get center of rectangles
 from .get_centroid import get_centroid
 
