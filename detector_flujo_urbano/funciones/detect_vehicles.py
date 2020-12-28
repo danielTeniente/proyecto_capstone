@@ -5,7 +5,7 @@ import cv2
 from .get_centroid import get_centroid
 
 def detect_vehicles(img, 
-    wh_cars={"min_w":18,"max_w":150,"min_h":18,"max_h":120},
+    wh_cars={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
     wh_motorcycles={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
     wh_people={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
     wh_heavy_vehicles={"min_w":0,"max_w":0,"min_h":0,"max_h":0}):

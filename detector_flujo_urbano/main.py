@@ -43,7 +43,7 @@ def draw_count(img, num_autos=0,num_buses=0,num_motos=0,num_personas=0):
     n_b=num_buses,
     n_c=num_personas,
     n_d=num_motos)), (30, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
     return img
 
 def contar_vehiculos(pathes=[],matches=[],path_size=10,exit_masks=None,vehicle_count=0):
@@ -122,7 +122,7 @@ def contar_vehiculos(pathes=[],matches=[],path_size=10,exit_masks=None,vehicle_c
             not check_exit(d[0],exit_masks) and
             # current point in exit zone
             check_exit(d[1],exit_masks) and
-            # path len is bigger then min
+            # path len is bigger than min
             path_size <= len(path)
         ):
             vehicle_count += 1
@@ -191,12 +191,11 @@ pathes_personas = []
 pathes_motos = []
 
 #pesos considerados para la medición de la distancia
-x_weight = 0.9
-y_weight = 0.7
+x_weight = 1
+y_weight = 50.
 
 max_dst=50
-path_size=5
-
+path_size=7
 
 #contadores
 contador_autos = 0
@@ -227,8 +226,10 @@ while True:
     ###################################
     #Eliminación del fondo y filtros
     ###################################
+    fgMask = cv2.GaussianBlur(roi, (5, 5), 0)
     
-    fgMask = backSub.apply(roi,None, 0.003)
+    fgMask = backSub.apply(fgMask,None, 0.003)
+
 
     #filtros
     #menores a 5,5 produce muchos bordes
@@ -262,11 +263,13 @@ while True:
     ########################################
 
     #Se buscan VEHICULOS en la imaen
+    # estas medidas sirvan para viaje en el eje x
+
     matches = detect_vehicles(resized_fgMask,
-        wh_heavy_vehicles={"min_w":100,"max_w":400,"min_h":50,"max_h":420},
-        wh_cars={"min_w":40,"max_w":99,"min_h":20,"max_h":49},
-        wh_motorcycles={"min_w":15,"max_w":39,"min_h":10,"max_h":19},
-        wh_people={"min_w":0,"max_w":14,"min_h":0,"max_h":9})
+        wh_heavy_vehicles={"min_w":150,"max_w":400,"min_h":0,"max_h":1000},
+        wh_cars={"min_w":50,"max_w":149,"min_h":0,"max_h":1000},
+        wh_motorcycles={"min_w":18,"max_w":49,"min_h":0,"max_h":1000},
+        wh_people={"min_w":0,"max_w":17,"min_h":0,"max_h":1000})
 
     #se dibujan rectángulos cuando encuentra un vehículo
     for match in matches["cars"]:
@@ -317,7 +320,7 @@ while True:
     #############33
     #Dibuja el contador
     ########################33
-    draw_count(resized_roi,num_autos=contador_autos,num_buses=contador_pesados)   
+    draw_count(resized_roi,num_autos=contador_autos,num_buses=contador_pesados,num_motos=contador_motos,num_personas=contador_personas)   
     #se reproduce la imagen zoom de la zona evaluada
     cv2.imshow('Frame', resized_roi)
     #se muestra la máscara sin fondo
