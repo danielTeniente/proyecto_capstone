@@ -1,10 +1,13 @@
-#open CV
-import cv2
 
 #get center of rectangles
 from .get_centroid import get_centroid
+from .detect_taxis import detect_taxis
 
-def detect_vehicles(img, 
+#open CV
+import cv2
+
+
+def detect_vehicles(img, img_color, 
     wh_cars={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
     wh_motorcycles={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
     wh_people={"min_w":0,"max_w":0,"min_h":0,"max_h":0},
@@ -25,10 +28,15 @@ def detect_vehicles(img,
     vehicles_founded = {"cars":[],
         "motorcycles":[],
         "heavy_vehicles":[],
-        "people":[]}
+        "people":[],
+        "taxis":[]}
+
+    color_mask = detect_taxis(img_color)
 
     #find contours of a image
     contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)
+
+
 
     # filtering types of vehicles
     for (i, contour) in enumerate(contours):
@@ -63,9 +71,15 @@ def detect_vehicles(img,
         if is_a_car:       
             # getting center of the bounding box
             centroid = get_centroid(x, y, w, h)
+            #cv2.rectangle(color_mask, (x,y), (x+w,y+h), 255, 3)
+            
+            is_a_taxi = (color_mask[y:y+h,x:x+w].sum()>0) 
 
+            if is_a_taxi:
+                vehicles_founded["taxis"].append(((x, y, w, h), centroid))
+            else:
             #save the rectangle and the center of it
-            vehicles_founded["cars"].append(((x, y, w, h), centroid))
+                vehicles_founded["cars"].append(((x, y, w, h), centroid))
 
         if is_a_heavy:
             #getting center of the bounding box
@@ -85,4 +99,5 @@ def detect_vehicles(img,
 
             vehicles_founded["people"].append(((x, y, w, h), centroid))
 
+        cv2.imshow('Taxis',color_mask)
     return vehicles_founded

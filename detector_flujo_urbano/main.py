@@ -1,7 +1,6 @@
 
 from funciones.detect_vehicles import detect_vehicles
 
-
 import numpy as np
 import cv2
 import argparse
@@ -35,14 +34,15 @@ def distance(x, y, x_weight=1.0, y_weight=1.0):
         
 
 
-def draw_count(img, num_autos=0,num_buses=0,num_motos=0,num_personas=0):      
+def draw_count(img, num_autos=0,num_buses=0,num_motos=0,num_personas=0, num_taxis=0):      
 
     # drawing top block with counts
     cv2.rectangle(img, (0, 0), (img.shape[1], 50), (0, 0, 0), cv2.FILLED)
-    cv2.putText(img, ("Ligeros: {n_a}, Pesados: {n_b}, Personas: {n_c}, Motocicletas: {n_d}".format(n_a=num_autos,
+    cv2.putText(img, ("Ligeros: {n_a}, Pesados: {n_b}, Personas: {n_c}, Motocicletas: {n_d}, Taxis:{n_e}".format(n_a=num_autos,
     n_b=num_buses,
     n_c=num_personas,
-    n_d=num_motos)), (30, 30),
+    n_d=num_motos,
+    n_e=num_taxis)), (30, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
     return img
 
@@ -189,6 +189,7 @@ pathes_autos = []
 pathes_buses = []
 pathes_personas = []
 pathes_motos = []
+pathes_taxis = []
 
 #pesos considerados para la medición de la distancia
 x_weight = 1
@@ -202,6 +203,7 @@ contador_autos = 0
 contador_pesados = 0
 contador_motos = 0
 contador_personas = 0
+contador_taxis = 0
 
 ##################################33
 #Procesamiento del video
@@ -265,7 +267,7 @@ while True:
     #Se buscan VEHICULOS en la imaen
     # estas medidas sirvan para viaje en el eje x
 
-    matches = detect_vehicles(resized_fgMask,
+    matches = detect_vehicles(resized_fgMask, resized_roi,
         wh_heavy_vehicles={"min_w":150,"max_w":400,"min_h":0,"max_h":1000},
         wh_cars={"min_w":50,"max_w":149,"min_h":0,"max_h":1000},
         wh_motorcycles={"min_w":18,"max_w":49,"min_h":0,"max_h":1000},
@@ -279,6 +281,14 @@ while True:
             cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (0, 128, 0), 3)
         else:
             cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (173, 255, 47), 3)
+
+    for match in matches["taxis"]:
+        (x, y, w, h) = match[0]
+        #dibuja un rectángulo
+        if(check_exit(match[1],[exit_mask])):
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (99, 156, 156), 3)
+        else:
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (23, 255, 252), 3)
 
     #se dibujan rectángulos cuando encuentra un vehículo pesado
     for match in matches["heavy_vehicles"]:
@@ -294,9 +304,9 @@ while True:
         (x, y, w, h) = match[0]
         #dibuja un rectángulo
         if(check_exit(match[1],[exit_mask])):
-            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (36, 98, 138), 3)
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (155, 85, 161), 3)
         else:
-            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (79, 175, 237), 3)            
+            cv2.rectangle(resized_roi, (x,y), (x+w,y+h), (182, 15, 206), 3)            
    
     #se dibujan rectángulos cuando encuentra una persona
     for match in matches["people"]:
@@ -320,7 +330,12 @@ while True:
     #############33
     #Dibuja el contador
     ########################33
-    draw_count(resized_roi,num_autos=contador_autos,num_buses=contador_pesados,num_motos=contador_motos,num_personas=contador_personas)   
+    draw_count(resized_roi,
+        num_autos=contador_autos,
+        num_buses=contador_pesados,
+        num_motos=contador_motos,
+        num_personas=contador_personas,
+        num_taxis=contador_taxis)   
     #se reproduce la imagen zoom de la zona evaluada
     cv2.imshow('Frame', resized_roi)
     #se muestra la máscara sin fondo
@@ -330,6 +345,7 @@ while True:
     contador_pesados,pathes_buses = contar_vehiculos(pathes=pathes_buses,matches=matches["heavy_vehicles"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_pesados)
     contador_motos,pathes_motos = contar_vehiculos(pathes=pathes_motos,matches=matches["motorcycles"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_motos)
     contador_personas,pathes_personas = contar_vehiculos(pathes=pathes_personas,matches=matches["people"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_personas)
+    contador_taxis,pathes_taxis = contar_vehiculos(pathes=pathes_taxis,matches=matches["taxis"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_taxis)
 
     #cerrar el programa
     keyboard = cv2.waitKey(30)
