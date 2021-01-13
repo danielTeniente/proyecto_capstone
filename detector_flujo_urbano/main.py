@@ -339,7 +339,7 @@ while True:
     #se reproduce la imagen zoom de la zona evaluada
     cv2.imshow('Frame', resized_roi)
     #se muestra la máscara sin fondo
-    cv2.imshow('FG Mask', resized_fgMask)
+    #cv2.imshow('FG Mask', resized_fgMask)
     exit_masks = [exit_mask]
     contador_autos,pathes_autos = contar_vehiculos(pathes=pathes_autos,matches=matches["cars"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_autos)
     contador_pesados,pathes_buses = contar_vehiculos(pathes=pathes_buses,matches=matches["heavy_vehicles"],path_size=path_size,exit_masks=exit_masks,vehicle_count=contador_pesados)
