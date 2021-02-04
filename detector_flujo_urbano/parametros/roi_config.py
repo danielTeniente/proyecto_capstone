@@ -12,10 +12,27 @@ def points_roi(video_id):
         yr2 = 700
     #sur oriente izquierda derecha
     elif(video_id=='sur_or_id'):
-        xr1 = 0
-        xr2 = 1200
+        #VALORES ORIGINALES
+        #xr1 = 0
+        #xr2 = 1200
+        #yr1 = 300
+        #yr2 = 1000
+        xr1 = 950
+        xr2 = 2000
         yr1 = 300
-        yr2 = 1000
+        yr2 = 1050
+    #nor occidente arriba abajo (estos valores estan obtenidos)
+    elif(video_id=='nor_oc_ab'):
+        xr1 = 0
+        xr2 = 800
+        yr1 = 300
+        yr2 = 1050
+    #nor occidente diagonal (estos valores estan obtenidos)
+    elif(video_id=='nor_oc_d'):
+        xr1 = 950
+        xr2 = 2000
+        yr1 = 300
+        yr2 = 1050
    
     return xr1,xr2, yr1, yr2 
 
