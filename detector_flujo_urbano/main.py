@@ -1,5 +1,7 @@
 
+
 from funciones.detect_vehicles import detect_vehicles
+from parametros.roi_config import *
 
 import numpy as np
 import cv2
@@ -147,9 +149,9 @@ def contar_vehiculos(pathes=[],matches=[],path_size=10,exit_masks=None,vehicle_c
 #FUNCIÓN PRINCIPAL
 ###############################
 
-parser = argparse.ArgumentParser(description='This program shows how to use background subtraction methods provided by \
-                                              OpenCV. You can process both videos and images.')
+parser = argparse.ArgumentParser(description='This program uses OpenCv to count vehicles')
 parser.add_argument('--input', type=str, help='Path to a video or a sequence of image.', default='vtest.avi')
+parser.add_argument('--config', type=str, help='Configurations for proccessing video: sur_or_ab, sur_or_id, nor_or,nor_oc', default='sur_or_id')
 
 args = parser.parse_args()
 #backSub = cv2.createBackgroundSubtractorKNN()
@@ -166,17 +168,15 @@ if not capture.isOpened:
     exit(0)
 
 # skipping 500 frames to train bg subtractor
-train_bg_subtractor(backSub, capture, num=499)
+#train_bg_subtractor(backSub, capture, num=499)
 
 ret, frame = capture.read()
 height , width , layers =  frame.shape
-new_h=height//3
-new_w=width//3
+new_h, new_w = size_roi(args.config,(height , width))
 SHAPE = (new_h,new_w)
 
 
-EXIT_PTS = [[(0, 0),(SHAPE[1]//4, SHAPE[0])],
-           [(SHAPE[1]//4*3,0),(SHAPE[1],SHAPE[0])]]
+EXIT_PTS = get_exit_points(args.config,SHAPE)
 
 exit_mask = np.zeros(SHAPE + (3,), dtype='uint8')
 
@@ -218,10 +218,7 @@ while True:
     ###################################
     #REGIÓN DE INTERES roi
     ####################################
-    xr1 = 0
-    xr2 = 1200
-    yr1 = 300
-    yr2 = 1000
+    xr1, xr2, yr1, yr2 = points_roi(video_id=args.config)
     roi = frame[yr1:yr2,xr1:xr2]
     cv2.rectangle(frame,(xr1,yr1),(xr2,yr2),(255,0,0),thickness=10)
 
@@ -254,7 +251,7 @@ while True:
     ###############################################
     #CAMBIO DE TAMAÑO DE LA IMAGEN
     ###############################################
-    resized_frame = cv2.resize(frame, (new_w, new_h)) 
+    resized_frame = cv2.resize(frame, (width//3, height//3)) 
     resized_roi = cv2.resize(roi, (new_w, new_h)) 
     resized_fgMask = cv2.resize(dilation, (new_w, new_h)) 
     #cv2.imshow('ROI', resized_roi)
@@ -266,12 +263,12 @@ while True:
 
     #Se buscan VEHICULOS en la imaen
     # estas medidas sirvan para viaje en el eje x
-
+    medidas = get_measurements(args.config)
     matches = detect_vehicles(resized_fgMask, resized_roi,
-        wh_heavy_vehicles={"min_w":150,"max_w":400,"min_h":0,"max_h":1000},
-        wh_cars={"min_w":50,"max_w":149,"min_h":0,"max_h":1000},
-        wh_motorcycles={"min_w":18,"max_w":49,"min_h":0,"max_h":1000},
-        wh_people={"min_w":0,"max_w":17,"min_h":0,"max_h":1000})
+        wh_heavy_vehicles=medidas['wh_heavy_vehicles'],
+        wh_cars=medidas['wh_cars'],
+        wh_motorcycles=medidas['wh_motorcycles'],
+        wh_people=medidas['wh_people'])
 
     #se dibujan rectángulos cuando encuentra un vehículo
     for match in matches["cars"]:
