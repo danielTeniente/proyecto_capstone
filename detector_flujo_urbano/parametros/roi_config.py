@@ -17,10 +17,10 @@ def points_roi(video_id):
         #xr2 = 1200
         #yr1 = 300
         #yr2 = 1000
-        xr1 = 950
-        xr2 = 2000
-        yr1 = 300
-        yr2 = 1050
+        xr1 = 1775
+        xr2 = 2375
+        yr1 = 1100
+        yr2 = 2200
     #nor occidente arriba abajo (estos valores estan obtenidos)
     elif(video_id=='nor_oc_ab'):
         xr1 = 0
@@ -33,6 +33,42 @@ def points_roi(video_id):
         xr2 = 2000
         yr1 = 300
         yr2 = 1050
+    #nor oriente izquierda derecha (estos valores estan obtenidos)
+    elif(video_id=='nor_or_id'):
+        xr1 = 0
+        xr2 = 950
+        yr1 = 0
+        yr2 = 450
+    #nor oriente arriba abajo (estos valores estan obtenidos)
+    elif(video_id=='nor_or_ab'):
+        xr1 = 900
+        xr2 = 1850
+        yr1 = 350
+        yr2 = 1050
+    #sur occidente arriba abajo (estos valores estan obtenidos)
+    elif(video_id=='sur_oc_ab'):
+        xr1 = 0
+        xr2 = 500
+        yr1 = 0
+        yr2 = 700
+    #puente guambra izquierda (estos valores estan obtenidos)
+    elif(video_id=='p_g_i'):
+        xr1 = 0
+        xr2 = 1650
+        yr1 = 200
+        yr2 = 1000
+    #puente guambra derecha diagonal (estos valores estan obtenidos)
+    elif(video_id=='p_g_d'):
+        xr1 = 2800
+        xr2 = 4100
+        yr1 = 1500
+        yr2 = 2200
+    #puente guambra arriba abajo (estos valores estan obtenidos)
+    elif(video_id=='p_g_ab'):
+        xr1 = 1775
+        xr2 = 2375
+        yr1 = 1100
+        yr2 = 2200
    
     return xr1,xr2, yr1, yr2 
 
