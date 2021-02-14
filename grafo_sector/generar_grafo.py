@@ -10,7 +10,7 @@ import pandas as pd
 
 # from a point
 point = (-0.206412, -78.499363)
-filtro = '["highway"~"primary|secondary"]'
+filtro = '["highway"~"primary|secondary|tertiary"]'
 graph = ox.graph_from_point(point, dist=1000, simplify=True, custom_filter=filtro)
 # Project the graph
 graph_proj = ox.project_graph(graph)
