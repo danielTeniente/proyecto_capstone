@@ -187,31 +187,36 @@ def get_measurements(video_id):
         measure['wh_cars']={"min_w":75,"max_w":174,"min_h":0,"max_h":1000}
         measure['wh_motorcycles']={"min_w":40,"max_w":75,"min_h":0,"max_h":1000}
         measure['wh_people']={"min_w":0,"max_w":39,"min_h":0,"max_h":1000}
+    #Nor Oriente ab(valores obtenidos)
     elif(video_id=='nor_or_ab'):
-        measure['wh_heavy_vehicles']={"min_w":150,"max_w":400,"min_h":0,"max_h":1000}
-        measure['wh_cars']={"min_w":50,"max_w":149,"min_h":0,"max_h":1000}
-        measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
-        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
+        measure['wh_heavy_vehicles']={"min_w":0,"max_w":1000,"min_h":100,"max_h":400}
+        measure['wh_cars']={"min_w":0,"max_w":1000,"min_h":30,"max_h":99}
+        measure['wh_motorcycles']={"min_w":18,"max_w":29,"min_h":18,"max_h":29}
+        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":17}
+    #Sur Occidente ab(valores obtenidos)
     elif(video_id=='sur_oc_ab'):
-        measure['wh_heavy_vehicles']={"min_w":150,"max_w":400,"min_h":0,"max_h":1000}
-        measure['wh_cars']={"min_w":50,"max_w":149,"min_h":0,"max_h":1000}
-        measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
-        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
+        measure['wh_heavy_vehicles']={"min_w":0,"max_w":1000,"min_h":90,"max_h":400}
+        measure['wh_cars']={"min_w":0,"max_w":1000,"min_h":30,"max_h":89}
+        measure['wh_motorcycles']={"min_w":0,"max_w":1000,"min_h":19,"max_h":29}
+        measure['wh_people']={"min_w":0,"max_w":1000,"min_h":0,"max_h":18}
+    #Puente Guambra i(valores obtenidos)
     elif(video_id=='p_g_i'):
-        measure['wh_heavy_vehicles']={"min_w":150,"max_w":400,"min_h":0,"max_h":1000}
-        measure['wh_cars']={"min_w":50,"max_w":149,"min_h":0,"max_h":1000}
-        measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
-        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
+        measure['wh_heavy_vehicles']={"min_w":100,"max_w":400,"min_h":0,"max_h":1000}
+        measure['wh_cars']={"min_w":50,"max_w":99,"min_h":0,"max_h":1000}
+        measure['wh_motorcycles']={"min_w":40,"max_w":49,"min_h":0,"max_h":1000}
+        measure['wh_people']={"min_w":0,"max_w":39,"min_h":0,"max_h":1000}
+    #Puente Guambra d(valores obtenidos)
     elif(video_id=='p_g_d'):
-        measure['wh_heavy_vehicles']={"min_w":150,"max_w":400,"min_h":0,"max_h":1000}
-        measure['wh_cars']={"min_w":50,"max_w":149,"min_h":0,"max_h":1000}
-        measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
-        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
+        measure['wh_heavy_vehicles']={"min_w":100,"max_w":400,"min_h":0,"max_h":1000}
+        measure['wh_cars']={"min_w":50,"max_w":99,"min_h":0,"max_h":1000}
+        measure['wh_motorcycles']={"min_w":40,"max_w":49,"min_h":0,"max_h":1000}
+        measure['wh_people']={"min_w":0,"max_w":39,"min_h":0,"max_h":1000}
+    #Puente Guambra ab(valores obtenidos)
     elif(video_id=='p_g_ab'):
-        measure['wh_heavy_vehicles']={"min_w":150,"max_w":400,"min_h":0,"max_h":1000}
-        measure['wh_cars']={"min_w":50,"max_w":149,"min_h":0,"max_h":1000}
-        measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
-        measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
+        measure['wh_heavy_vehicles']={"min_w":0,"max_w":1000,"min_h":125,"max_h":400}
+        measure['wh_cars']={"min_w":0,"max_w":1000,"min_h":50,"max_h":124}
+        measure['wh_motorcycles']={"min_w":0,"max_w":1000,"min_h":26,"max_h":49}
+        measure['wh_people']={"min_w":0,"max_w":1000,"min_h":0,"max_h":25}
 
     return measure
     
