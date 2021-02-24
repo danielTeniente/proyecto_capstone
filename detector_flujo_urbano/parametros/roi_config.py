@@ -122,38 +122,41 @@ def get_exit_points(video_id,shape):
         EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
                     [(shape[1]//4*3,0),(shape[1],shape[0])],
                     [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+    #Nor Oc ab (valor obtenido)
     elif(video_id=='nor_oc_ab'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+        EXIT_PTS = [[(0,0),(shape[1],shape[0]//3)],
+                    [(0,shape[0]//4*3),(shape[1],shape[0])]]    
+    #Nor Oc d (valor obtenido)
     elif(video_id=='nor_oc_d'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
+        EXIT_PTS = [[(0, 0),(shape[1]//5, shape[0])],
                     [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+                    [(0,shape[0]//5*4),(shape[1],shape[0])]]  
+    #Nor or id (valores obtenidos)
     elif(video_id=='nor_or_id'):
         EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+                    [(shape[1]//4*3,0),(shape[1],shape[0])]]
+    #Nor or ab (valores obtenidos)
     elif(video_id=='nor_or_ab'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+        EXIT_PTS = [[(0,0),(shape[1],shape[0]//3)],
+                    [(0,shape[0]//4*3),(shape[1],shape[0])]]     
+    #Sur oc ab (valores obtenidos)
     elif(video_id=='sur_oc_ab'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+        EXIT_PTS = [[(0,0),(shape[1],shape[0]//3)],
+                    [(0,shape[0]//4*3),(shape[1],shape[0])]]  
+    #Puente G (valores obtenidos)
     elif(video_id=='p_g_i'):
         EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+                    [(shape[1]//4*3,0),(shape[1],shape[0])]]  
+    #Puente G (valores obtenidos)
     elif(video_id=='p_g_d'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
+        EXIT_PTS = [[(0, 0),(shape[1]//5, shape[0])],
                     [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+                    [(0,shape[0]//5*4),(shape[1],shape[0])],
+                    [(0,0),(shape[1]//5*2,shape[0]//3)]]  
+    #Puente G (valores obtenidos)
     elif(video_id=='p_g_ab'):
-        EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+        EXIT_PTS = [[(0,0),(shape[1],shape[0]//4)],
+                    [(0,shape[0]//4*3),(shape[1],shape[0])]]     
     return EXIT_PTS
 
 def get_measurements(video_id):
