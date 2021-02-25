@@ -99,5 +99,5 @@ def detect_vehicles(img, img_color,
 
             vehicles_founded["people"].append(((x, y, w, h), centroid))
 
-        cv2.imshow('Taxis',color_mask)
+        #cv2.imshow('Taxis',color_mask)
     return vehicles_founded
