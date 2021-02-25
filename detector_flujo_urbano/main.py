@@ -168,7 +168,7 @@ if not capture.isOpened:
     exit(0)
 
 # skipping 500 frames to train bg subtractor
-#train_bg_subtractor(backSub, capture, num=499)
+train_bg_subtractor(backSub, capture, num=500)
 
 ret, frame = capture.read()
 height , width , layers =  frame.shape
