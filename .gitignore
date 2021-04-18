@@ -1,0 +1,10 @@
+.ipynb_checkpoints
+__pycache__
+detector_flujo_urbano/videos_originales
+nor_occidente.mp4
+nor_oriente.mp4
+Puente_guambra2.mp4
+sur_occidente.mp4
+sur_oriente.mp4
+grafo_sector/cache
+detector_flujo_urbano\parametros\__pycache__
