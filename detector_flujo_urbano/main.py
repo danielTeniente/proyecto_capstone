@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import argparse
 import math
+import pandas as pd
 
 #se envía la ubicación del vehículo y se pregunta si está o no en la zona de salida
 def check_exit(point, exit_masks):
@@ -349,3 +350,19 @@ while True:
 
     if keyboard == 'q' or keyboard == 27:
         break    
+
+
+###########
+#SE GUARDA LA INFORMACION DEL CONTEO
+#############
+
+dict_count = {
+    "num_autos":[contador_autos],
+    "num_buses":[contador_pesados],
+    "num_motos":[contador_motos],
+    "num_personas":[contador_personas],
+    "num_taxis":[contador_taxis]}
+
+df = pd.DataFrame(dict_count)
+file_name = 'conteo_'+str(args.config)+'.csv'
+df.to_csv(file_name,index=False)
