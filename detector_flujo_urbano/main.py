@@ -357,8 +357,8 @@ while True:
 #############
 
 dict_count = {
-    "num_autos":[contador_autos],
-    "num_buses":[contador_pesados],
+    "num_ligeros":[contador_autos],
+    "num_pesados":[contador_pesados],
     "num_motos":[contador_motos],
     "num_personas":[contador_personas],
     "num_taxis":[contador_taxis]}
