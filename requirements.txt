@@ -63,7 +63,7 @@ pandas==1.2.1
 pandocfilters @ file:///C:/ci/pandocfilters_1605114832805/work
 parso==0.7.0
 pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
-Pillow==8.0.1
+Pillow==8.1.1
 pipwin==0.5.1
 prometheus-client @ file:///tmp/build/80754af9/prometheus_client_1606344362066/work
 prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1602688806899/work
@@ -100,7 +100,7 @@ toml==0.10.2
 tornado @ file:///C:/ci/tornado_1606924294691/work
 traitlets @ file:///tmp/build/80754af9/traitlets_1602787416690/work
 tzlocal==2.1
-urllib3==1.26.2
+urllib3==1.26.4
 wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
 webencodings==0.5.1
 wincertstore==0.2
