@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 __pycache__
 detector_flujo_urbano/videos_originales
+analisis/cache
 nor_occidente.mp4
 nor_oriente.mp4
 Puente_guambra2.mp4

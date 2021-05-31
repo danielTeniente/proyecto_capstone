@@ -5,11 +5,12 @@ def points_roi(video_id):
     yr1 = 0
     yr2 = 0
     #sur oriente arriba-abajo
-    if(video_id=='sur_or_ab'):
+    if(video_id=='sur_or_ab' or video_id=='sur_or_ai'):
         xr1 = 1000
         xr2 = 1850
         yr1 = 0
         yr2 = 700
+
     #sur oriente izquierda derecha
     elif(video_id=='sur_or_id'):
         xr1 = 0
@@ -71,7 +72,7 @@ def size_roi(video_id,video_size):
     height = 0
     width = 0
     #primeros tamañanos ya se encuentran listos
-    if(video_id=='sur_or_ab'):
+    if(video_id=='sur_or_ab' or video_id=='sur_or_ai'):
         height = video_size[1]//3
         width = video_size[0]//2
     elif(video_id=='sur_or_id'):
@@ -119,9 +120,11 @@ def get_exit_points(video_id,shape):
         EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
                     [(shape[1]//4*3,0),(shape[1],shape[0])]]
     elif(video_id=='sur_or_ab'):
+        EXIT_PTS = [[(0,shape[0]//3*2),(shape[1],shape[0])]]    
+    #arriba izquierda
+    elif(video_id=='sur_or_ai'):
         EXIT_PTS = [[(0, 0),(shape[1]//4, shape[0])],
-                    [(shape[1]//4*3,0),(shape[1],shape[0])],
-                    [(0,shape[0]//3*2),(shape[1],shape[0])]]    
+                    [(0,shape[0]//4*3),(shape[1]//3*2,shape[0])]]
     #Nor Oc ab (valor obtenido)
     elif(video_id=='nor_oc_ab'):
         EXIT_PTS = [[(0,0),(shape[1],shape[0]//3)],
@@ -167,11 +170,11 @@ def get_measurements(video_id):
         measure['wh_motorcycles']={"min_w":18,"max_w":49,"min_h":0,"max_h":1000}
         measure['wh_people']={"min_w":0,"max_w":17,"min_h":0,"max_h":1000}
     #Sur Oriente (valores obtenidos)
-    elif(video_id=='sur_or_ab'):
+    elif(video_id=='sur_or_ab' or video_id=='sur_or_ai'):
         measure['wh_heavy_vehicles']={"min_w":0,"max_w":1000,"min_h":150,"max_h":400}
         measure['wh_cars']={"min_w":0,"max_w":1000,"min_h":50,"max_h":149}
-        measure['wh_motorcycles']={"min_w":0,"max_w":1000,"min_h":18,"max_h":49}
-        measure['wh_people']={"min_w":0,"max_w":1000,"min_h":0,"max_h":17}
+        measure['wh_motorcycles']={"min_w":0,"max_w":1000,"min_h":21,"max_h":49}
+        measure['wh_people']={"min_w":0,"max_w":1000,"min_h":0,"max_h":20}
     #Nor Occidente ab(valores obtenidos)
     elif(video_id=='nor_oc_ab'):
         measure['wh_heavy_vehicles']={"min_w":0,"max_w":1000,"min_h":100,"max_h":400}
