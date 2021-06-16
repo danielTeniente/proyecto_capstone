@@ -1,2 +1,3 @@
-### Necesita la carpeta funciones
-Estos notebooks guía pueden ser ejecutados correctamente si se encuentran en el mismo directorio que la carpeta funciones.
+# Contador automático
+
+Estos notebooks son una guía para entender cómo funciona el contador automático de vehículos.

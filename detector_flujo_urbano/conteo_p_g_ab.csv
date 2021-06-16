@@ -1,2 +1,2 @@
-num_autos,num_buses,num_motos,num_personas,num_taxis
+num_ligeros,num_pesados,num_motos,num_personas,num_taxis
 20,1,4,15,13
