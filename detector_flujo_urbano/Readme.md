@@ -7,7 +7,7 @@ Este ejemplo utiliza videos tomados por un dron en una zona de interés de la ci
 
 Se debe ejecutar el archivo [main.py](./main.py) de la siguiente forma:
 
-python main.py --input "nombre del video" --config "id_configuración"
+python main.py --input "ruta del video" --config "id_configuración"
 
 Cada video de ejemplo tiene un id de configuración para que funcione.
 Estas son todas las posibles formas de usar el programa:
@@ -31,4 +31,4 @@ Si quieres acceder a los videos de ejemplo puedes hacerlo a través del [siguien
 Si quieres conocer cómo funciona este módulo de conteo automático, la carpeta [notebooks](./notebooks/README.md) contiene las explicaciones esenciales sobre el funcionamiento de main.py.
 
 ## Personalización 
-Si quieres usar el contador automático en tus propios videos sólo debes modificar los [parámetros](./parametros) para ajustarlos a tu contenido.
+Si quieres usar el contador automático en tus propios videos sólo debes modificar los [parámetros](./parametros/README.md) para ajustarlos a tu contenido.
