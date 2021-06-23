@@ -25,7 +25,7 @@ Estas son todas las posibles formas de usar el programa:
 * python .\main.py --input ".\Puente_guambra2.mp4" --config "p_g_ab"
 
 ## Descargar los videos de ejemplo
-Si quieres acceder a los videos de ejemplo puedes hacerlo a través del [siguiente link](https://cutt.ly/HnRDmNE).
+Si quieres acceder a los videos de ejemplo puedes hacerlo a través del [siguiente link](https://drive.google.com/drive/folders/1P5fXyyU007_YWMmEbsIV6-onQnFBMjr4?usp=sharing).
 
 ## Aprendizaje
 Si quieres conocer cómo funciona este módulo de conteo automático, la carpeta [notebooks](./notebooks/README.md) contiene las explicaciones esenciales sobre el funcionamiento de main.py.
